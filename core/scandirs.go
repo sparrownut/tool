@@ -10,6 +10,7 @@ import (
 	"time"
 	"tool/Global"
 	"tool/utils"
+	"tool/utils/Slice"
 )
 
 type WebStatus struct {
@@ -73,6 +74,13 @@ func MakeTasks(isSuc *bool) TaskList {
 }
 
 func DoTasks(tasklist TaskList, isSuc *bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			if Global.DBG {
+				println(r) // DBG模式下报个错 这实际上意味着网站无法访问
+			}
+		}
+	}()
 	doneMap := make(map[string]WebStatus)
 	maxThreads := tasklist.maxthreads
 	threads := 0
@@ -127,7 +135,10 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				//simScore := judgFingerPrintIsSame(FailFingerPrint, TmpFingerPrint)
 				//println(doneMap[task.url].statusCode)
 				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].text != TmpFingerPrint.text
-					utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v}", task.url+task.dir, len(resp.Text)))
+					if Slice.CheckIs404Content(resp.Text) { //没有特征迹象
+						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v}", task.url+task.dir, len(resp.Text)))
+					}
+
 				} else if Global.DBG {
 					println("threads:" + strconv.Itoa(threads))
 					utils.Printminfo(fmt.Sprintf("URL{%v} CODE{%v} BODY{%v} 扫描完成 无敏感泄露", task.url+task.dir, resp.StatusCode, resp.Text))
