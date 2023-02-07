@@ -14,6 +14,8 @@ require (
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
+	github.com/haozibi/ProxyPool v0.1.4 // indirect
+	github.com/haozibi/gglog v0.1.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect

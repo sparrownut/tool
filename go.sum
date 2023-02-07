@@ -28,6 +28,10 @@ github.com/gobwas/glob v0.2.3/go.mod h1:d3Ez4x06l9bZtSvzIay5+Yzi0fmZzPgnTbPcKjJA
 github.com/golang/protobuf v1.3.3 h1:gyjaxf+svBWX08ZjK86iN9geUJF0H6gp2IRKX6Nf6/I=
 github.com/golang/protobuf v1.3.3/go.mod h1:vzj43D7+SQXF/4pzW/hwtAqwc6iTitCiVSaWz5lYuqw=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
+github.com/haozibi/ProxyPool v0.1.4 h1:MHuQmAocq6+Z+Ql5QRyxJcLoE3CUkawJkT5/hi3U8Ik=
+github.com/haozibi/ProxyPool v0.1.4/go.mod h1:9nOYauYMXUBml90qDJ+9T/q5YvqhCe8Dskb9BD6xWXg=
+github.com/haozibi/gglog v0.1.2 h1:nRWo+v9YSCcMDyQ5u8dHslJH+f0+BLOJnOdqPvpgyhI=
+github.com/haozibi/gglog v0.1.2/go.mod h1:U62TyA3yT/W8u596NiudYEHoYwTbSRz/HtSWrSISp/Q=
 github.com/json-iterator/go v1.1.9 h1:9yzud/Ht36ygwatGx56VwCZtlI/2AD15T1X2sjSuGns=
 github.com/json-iterator/go v1.1.9/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/leodido/go-urn v1.2.0 h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=
