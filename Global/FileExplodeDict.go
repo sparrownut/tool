@@ -6,6 +6,7 @@ var (
 		".bash_logout",
 		".bash_profile",
 		".bashrc",
+		"cgi-bin/phf?Qalias=x%0a/bin/cat%20/etc/passwd",
 		".config.inc.php.swp",
 		".config.php.swp",
 		".credentials",
@@ -1181,5 +1182,7 @@ var (
 		"zentao",
 		"zeusQuartz.properties",
 		"zf_backend.php",
-		"zimbra/"}
+		"zimbra/",
+		"../../../../../../etc/passwd",
+	}
 )
