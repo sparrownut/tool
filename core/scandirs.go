@@ -162,7 +162,7 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				//println(doneMap[task.url].statusCode)
 				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].text != TmpFingerPrint.text
 					if !Slice.CheckIs404Content(resp.Text) { //没有特征迹象
-						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v}", task.url+task.dir, len(resp.Text), resp.StatusCode))
+						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v}", task.url+task.dir, len(resp.Body), resp.StatusCode))
 					}
 
 				} else if Global.DBG {
