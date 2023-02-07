@@ -2,20 +2,20 @@ package main
 
 import (
 	"github.com/urfave/cli/v2"
-	"net"
 	"os"
 	"tool/Global"
 	"tool/core"
 	"tool/utils"
+	"tool/utils/network"
 )
 
 func main() {
 
 	app := &cli.App{
 		Name:      "tool",
-		Usage:     "如题 它就叫工具\n仅供授权的渗透测试使用 请遵守法律!", // 这里写协议
+		Usage:     "如题 它就叫工具 \n仅供授权的渗透测试使用 请遵守法律!", // 这里写协议
 		UsageText: "一个工具集合",
-		Version:   "0.3.2",
+		Version:   "0.3.3",
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "MOD", Aliases: []string{"M"}, Destination: &Global.MOD, Value: "scandirs", Usage: "模式选择 \n 文件泄露目录扫描 - scandirs", Required: false},
 			&cli.StringFlag{Name: "OutputFile", Aliases: []string{"O"}, Destination: &Global.OUTPUTFILE, Value: "default format", Usage: "输出文件", Required: false},
@@ -42,8 +42,11 @@ func main() {
 
 func Init() {
 	//授权
-	_, dnsResolvErr := net.LookupIP("toolkey.stuid-fish.co")
-	if dnsResolvErr != nil {
+	if !network.CheckDomainIsAlive("www.baidu.com") && !network.CheckDomainIsAlive("www.google.com") {
+		println("网络连接故障")
+		os.Exit(0)
+	}
+	if !network.CheckDomainIsAlive("toolkey.stuid-fish.co") {
 		println("此软件未授权!")
 		os.Exit(0)
 	}
