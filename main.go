@@ -15,7 +15,7 @@ func main() {
 		Name:      "tool",
 		Usage:     "如题 它就叫工具 \n仅供授权的渗透测试使用 请遵守法律!", // 这里写协议
 		UsageText: "一个工具集合",
-		Version:   "0.3.4",
+		Version:   "0.3.5",
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "MOD", Aliases: []string{"M"}, Destination: &Global.MOD, Value: "scandirs", Usage: "模式选择 \n 文件泄露目录扫描 - scandirs", Required: false},
 			&cli.StringFlag{Name: "OutputFile", Aliases: []string{"O"}, Destination: &Global.OUTPUTFILE, Value: "default format", Usage: "输出文件", Required: false},
