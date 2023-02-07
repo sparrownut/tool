@@ -159,12 +159,16 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				TmpFingerPrint.statusCode = resp.StatusCode
 				TmpFingerPrint.body = resp.Body
 
+				TmpText := string(TmpFingerPrint.body)
+				utils.StringsFilter(&TmpText)
+
 				//simScore := judgFingerPrintIsSame(FailFingerPrint, TmpFingerPrint)
 				//println(doneMap[task.url].statusCode)
 				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].body != TmpFingerPrint.body
 					if !Slice.CheckIs404Content(string(TmpFingerPrint.body)) { //没有特征迹象
 						outputUrl := task.url + task.dir
-						outputStr := fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v} RESP_BODY{%v}", outputUrl, len(resp.Body), resp.StatusCode, string(resp.Body))
+
+						outputStr := fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v} RESP_BODY{%v}", outputUrl, len(TmpText), resp.StatusCode, TmpText)
 						if judgFingerPrintIsSame(doneMap[task.url], TmpFingerPrint) < 3 {
 							outputStr = utils.SPrintColor(outputStr, color.FgRed, color.Bold) // 及不同的红色标注
 						}

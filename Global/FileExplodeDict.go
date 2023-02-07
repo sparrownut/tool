@@ -866,6 +866,7 @@ var (
 		"sms",
 		"socker.io",
 		"socket",
+		"servlet/~ic/bsh.servlet.BshServlet",
 		"sofa-config.properties",
 		"solr",
 		"solr/",
