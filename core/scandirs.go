@@ -81,17 +81,36 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 			}
 		}
 	}()
+
+	bannedList := []string{} // 访问失败的，以后禁止访问的
 	doneMap := make(map[string]WebStatus)
 	maxThreads := tasklist.maxthreads
 	threads := 0
 	for _, task := range tasklist.tasks {
+		//utils.DBGLOG(fmt.Sprintf("%v", task.url+task.dir))
+		//检测此次任务是否被标记黑名单 (无法连通)
+		if Slice.CheckIsStringInSlice(task.url, bannedList) {
+			//utils.DBGLOG("在黑名单中")
+			continue
+		}
 		//随机访问url 获取失败的返回指纹
-
 		if _, k := doneMap[task.url]; !k { // 如果没扫过这个url
+			//扫描是否能访问 不能 这个url拉黑
+			if !utils.CheckUrlIsAlive(task.url) {
+				utils.Printerr(fmt.Sprintf("%v不能访问 拉黑", task.url))
+				utils.DBGLOG(fmt.Sprintf("拉黑%v", task.url))
+				bannedList = append(bannedList, task.url)
+				continue
+			}
 
+			//扫描404指纹
+			utils.DBGLOG(fmt.Sprintf("测试404指纹%v", task.url))
 			FailFingerPrint := WebStatus{isFail: true}
-			getFailreq := goreq.Get(task.url + utils.RandStringRunes(8)).SetClient(goreq.NewClient())
+			getFailreq := goreq.Get(task.url + utils.RandStringRunes(8)).SetClient(goreq.NewClient()).SetTimeout(time.Duration(time.Second * 20))
 			respFail := getFailreq.Do()
+			if respFail.Error() != nil {
+				bannedList = append(bannedList, task.url)
+			}
 			FailFingerPrint.url = task.url
 			FailFingerPrint.dir = task.dir
 			FailFingerPrint.statusCode = respFail.StatusCode
@@ -103,10 +122,15 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 			//去除空资产
 			continue
 		}
+		//重试机制
+		retryNMap := make(map[string]int)
+		retryNMap[task.url] = 0
+		//执行
 	retry:
 		if threads <= maxThreads {
 			time.Sleep(time.Duration(time.Millisecond * 10))
 			go func(task Task) {
+			goroutineRetry:
 				defer func() {
 					if r := recover(); r != nil {
 						if Global.DBG {
@@ -121,9 +145,11 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				taskResolved := task.url + task.dir
 				getreq := goreq.Get(taskResolved).SetClient(goreq.NewClient())
 				resp := getreq.Do()
-				if getreq.Err != nil && resp.Err != nil {
-					//错误处理机制
-					*isSuc = false
+				if resp.Error() != nil {
+					if retryNMap[task.url] <= 5 {
+						retryNMap[task.url]++
+						goto goroutineRetry
+					}
 					return
 				}
 				//获取指纹
@@ -141,19 +167,9 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 
 				} else if Global.DBG {
 					println("threads:" + strconv.Itoa(threads))
-					utils.Printminfo(fmt.Sprintf("URL{%v} CODE{%v} BODY{%v} 扫描完成 无敏感泄露", task.url+task.dir, resp.StatusCode, resp.Text))
+					utils.Printminfo(fmt.Sprintf("URL{%v} CODE{%v} 扫描完成 无敏感泄露", task.url+task.dir, resp.StatusCode))
 
 				}
-				//return
-				//定时30s结束
-				for {
-					select {
-					case <-time.After(time.Duration(time.Second * 20)):
-						threads--
-						return
-					}
-				}
-				//return
 			}(task)
 		} else {
 			//如果线程超过最大就重试
