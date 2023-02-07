@@ -161,7 +161,7 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				//simScore := judgFingerPrintIsSame(FailFingerPrint, TmpFingerPrint)
 				//println(doneMap[task.url].statusCode)
 				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].text != TmpFingerPrint.text
-					if Slice.CheckIs404Content(resp.Text) { //没有特征迹象
+					if !Slice.CheckIs404Content(resp.Text) { //没有特征迹象
 						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v}", task.url+task.dir, len(resp.Text)))
 					}
 
