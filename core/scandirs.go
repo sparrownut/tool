@@ -18,7 +18,7 @@ type WebStatus struct {
 	url        string
 	dir        string
 	statusCode int
-	text       string
+	body       []byte
 }
 
 type Task struct {
@@ -38,7 +38,7 @@ func judgFingerPrintIsSame(fp1 WebStatus, fp2 WebStatus) float64 {
 	if fp1.statusCode == fp2.statusCode {
 		score += 5.0
 	}
-	score += 5.0 * strsim.Compare(fp1.text, fp2.text)
+	score += 5.0 * strsim.Compare(string(fp1.body), string(fp2.body))
 	return score
 }
 
@@ -156,12 +156,12 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				TmpFingerPrint.dir = task.dir
 				TmpFingerPrint.url = task.url
 				TmpFingerPrint.statusCode = resp.StatusCode
-				TmpFingerPrint.text = resp.Text
+				TmpFingerPrint.body = resp.Body
 
 				//simScore := judgFingerPrintIsSame(FailFingerPrint, TmpFingerPrint)
 				//println(doneMap[task.url].statusCode)
-				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].text != TmpFingerPrint.text
-					if !Slice.CheckIs404Content(resp.Text) { //没有特征迹象
+				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].body != TmpFingerPrint.body
+					if !Slice.CheckIs404Content(string(TmpFingerPrint.body)) { //没有特征迹象
 						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v}", task.url+task.dir, len(resp.Body), resp.StatusCode))
 					}
 
