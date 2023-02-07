@@ -7,6 +7,11 @@ import (
 	"tool/Global"
 )
 
+func SPrintColor(text string, colorattr ...color.Attribute) string {
+	c := color.New(colorattr...)
+	return c.Sprintf(fmt.Sprintf("%v", text))
+}
+
 func Printsuc(text string, args ...any) {
 	c := color.New(color.FgHiGreen, color.Bold)
 	_, _ = c.Printf(text+"\n", args...)

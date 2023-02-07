@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/antlabs/strsim"
+	"github.com/fatih/color"
 	"github.com/zhshch2002/goreq"
 	"os"
 	"strconv"
@@ -162,7 +163,12 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 				//println(doneMap[task.url].statusCode)
 				if doneMap[task.url].statusCode != TmpFingerPrint.statusCode { //如果存在漏洞 (与随机字符串的地址相差很大) || doneMap[task.url].body != TmpFingerPrint.body
 					if !Slice.CheckIs404Content(string(TmpFingerPrint.body)) { //没有特征迹象
-						utils.Printsuc(fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v}", task.url+task.dir, len(resp.Body), resp.StatusCode))
+						outputUrl := task.url + task.dir
+						outputStr := fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v} RESP_BODY{%v}", outputUrl, len(resp.Body), resp.StatusCode, string(resp.Body))
+						if judgFingerPrintIsSame(doneMap[task.url], TmpFingerPrint) < 3 {
+							outputStr = utils.SPrintColor(outputStr, color.FgRed, color.Bold) // 及不同的红色标注
+						}
+						utils.Printsuc(outputStr)
 					}
 
 				} else if Global.DBG {
