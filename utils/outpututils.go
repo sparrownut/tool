@@ -21,7 +21,7 @@ func Printsuc(text string, args ...any) {
 		if err != nil {
 			panic(err)
 		}
-		_, _ = logFile.WriteString(fmt.Sprintf(text))
+		_, _ = logFile.WriteString(fmt.Sprintf(text) + "\n")
 	}
 
 }
