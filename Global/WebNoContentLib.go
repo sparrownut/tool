@@ -6,5 +6,6 @@ var (
 		"403 Forbidden",
 		"404NotFound",
 		"500InternalServerError",
+		"您的访问被阻断",
 	}
 )
