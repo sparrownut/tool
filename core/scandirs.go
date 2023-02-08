@@ -169,8 +169,12 @@ func DoTasks(tasklist TaskList, isSuc *bool) {
 						outputUrl := task.url + task.dir
 
 						outputStr := fmt.Sprintf("URL{%v} RESP_LEN{%v} RESP_CODE{%v} RESP_BODY{%v}", outputUrl, len(TmpText), resp.StatusCode, TmpText)
-						if judgFingerPrintIsSame(doneMap[task.url], TmpFingerPrint) < 3 {
-							outputStr = utils.SPrintColor(outputStr, color.FgHiYellow, color.Bold) // 及不同的红色标注
+						outputStr = utils.SPrintColor(outputStr, color.FgGreen, color.Bold) // 默认是浅绿色
+						if judgFingerPrintIsSame(doneMap[task.url], TmpFingerPrint) < 2 && resp.StatusCode == 200 {
+							outputStr = utils.SPrintColor(outputStr, color.FgHiGreen, color.Bold) // 比较有东西发现亮绿色
+							if Slice.CheckIsImportantExplode(string(TmpFingerPrint.body)) {
+								outputStr = utils.SPrintColor(outputStr, color.FgHiBlue, color.Bold) // 重要发现亮蓝色
+							}
 						}
 						utils.Printsuc(outputStr)
 					}
